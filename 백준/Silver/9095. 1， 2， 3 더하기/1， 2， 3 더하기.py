@@ -8,6 +8,8 @@ def find(level):
     global cnt
     if sum(selected) == N:
         cnt += 1
+    if sum(selected) > N:
+        return 
     if level == N:
         return
     for i in range(1, 4):
