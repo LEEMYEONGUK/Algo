@@ -4,10 +4,7 @@ def dfs(n, s, tlst):
         print(*tlst)
         return
     for j in range(s, k + 1):
-        if visited[j] == 0:
-            visited[j] = 1
-            dfs(n + 1, j + 1, tlst+[lst[j]])
-            visited[j] = 0
+        dfs(n + 1, j + 1, tlst+[lst[j]])
 
 
 while True:
@@ -16,6 +13,5 @@ while True:
         break
     else:
         k = lst[0]
-        visited = [0] * (k + 1)
         dfs(0, 1, [])
         print()
