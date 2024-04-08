@@ -1,46 +1,54 @@
 # 토마토
-# BFS
 from collections import deque
-
-dr = [-1, 1, 0, 0]
-dc = [0, 0, -1, 1]
-
 def bfs():
-    while que:
-        r, c = que.popleft()
-        for d in range(4):
-            nr = r + dr[d]
-            nc = c + dc[d]
-            if 0 <= nr < N and 0 <= nc < M and adjm[nr][nc] == 0:
-                que.append((nr, nc))
-                # 기준의 주변 토마토가 하루 후에 익기 때문에 1 더해주기
-                adjm[nr][nc] = adjm[r][c] + 1
+    while q:
+        r, c = q.popleft()
+        # 상, 하, 좌, 우
+        for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+            nr, nc = r + dr, c + dc
+            # 안익은 토마토라면 큐 삽입
+            if 0 <= nr < N and 0 <= nc < M and visited[nr][nc] == 0 and lst[nr][nc] == 0:
+                visited[nr][nc] = visited[r][c] + 1
+                q.append((nr, nc))
 
 def find():
     max_v = -1
-    # 배열을 순회하며
-    for r in range(N):
-        for c in range(M):
-            # 익지 않은 토마토가 있을 시 -1 반환
-            if adjm[r][c] == 0:
-                return -1
-            # 할당 된 값을 비교하며 최댓값 찾기
-            if max_v < adjm[r][c]:
-                max_v = adjm[r][c]
-    # 시작을 1로 했으니 1 빼주기 
-    # (처음에 하루가 지나면 1 주변의 토마토가 익으면서 2 할당 되기 때문)
-    return max_v - 1
+    for i in range(N):
+        for j in range(M):
+            if visited[i][j] == 0:
+                print(-1)
+                return
+            max_v = max(max_v, visited[i][j])
+    else:
+        print(max_v - 1)
+        return
 
-M, N = map(int, input().split())
-adjm = [list(map(int, input().split())) for _ in range(N)]
+# 입력값 받기
+M, N= map(int, input().split())
+lst = [list(map(int, input().split())) for _ in range(N)]
 
-# 출발 지점이 2개 이상일 수 있으니
-# 값이 1인 행과 열을 먼저 큐에 넣고 bfs 실행 
-que = deque()
-for r in range(N):
-    for c in range(M):
-        if adjm[r][c] == 1:
-            que.append((r, c))
+# 큐 생성
+q = deque()
+# 방문 표시
+visited = [[0] * M for _ in range(N)]
+# 초기 토마토 상태 확인
+flag = 0
+# lst 값이 1 이면 큐에 넣고 bfs
+# lst 값이 0 이 있으면 flag 1 저장 후 bfs, find 실행
+for i in range(N):
+    for j in range(M):
+        if lst[i][j] == 1:
+            q.append((i, j))
+            visited[i][j] = 1
+        if lst[i][j] == -1:
+            visited[i][j] = -1
+        if lst[i][j] == 0:
+            flag = 1
 
-bfs()
-print(find())
+if flag:
+    bfs()
+    find()
+# flag가 0이라는 것은 초기 토마토 상태에 0이 없다는 것
+# 즉, 다 익은 상태
+else:
+    print(0)
