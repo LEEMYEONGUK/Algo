@@ -1,12 +1,15 @@
 N = int(input())
 
 # 빈자리 만들고 좋아하는 친구 리스트 입력 받기
+# 경계값 벗어나는거 생각하지 않도록 -1 로 둘러싸기
 seat = [[-1]*(N + 2)] +[[-1] + [0] * N + [-1] for _ in range(N)] +[[-1] * (N + 2)]
 lst = [list(map(int, input().split())) for _ in range(N**2)]
+# 점수를 세기 위한 리스트 정렬
 s_lst = [[0]*(N + 2)] + sorted(lst)
 
 # 좋아하는 친구 리스트를 순회하며 조건에 맞는 자리에 배치
 for l in lst:
+    # 처음 값(seat[1][1])이 무조건 갱신될 수 있도록 초기값 -1 로 설정
     empty_max = -1
     cnt_max = -1
     for i in range(1, N + 1):
@@ -22,7 +25,7 @@ for l in lst:
                 # 좋아하는 친구 수
                 if seat[ni][nj] in l:
                     cnt += 1
-            # 좋하하는 친구 수가 클때 or 좋아하는 친구 수가 같으면서 빈칸이 더 많을 때의 좌표 저장 
+            # 좋하하는 친구 수가 클때 or 좋아하는 친구 수가 같으면서 빈칸이 더 많을 때의 좌표 저장
             if cnt_max < cnt or (cnt_max == cnt and empty_max < empty):
                 cnt_max = cnt
                 empty_max = empty
